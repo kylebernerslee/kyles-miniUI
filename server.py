@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "tinyllama:latest"
+MODEL_NAME = "qwen2.5:0.5b"
 
 @app.route('/')
 def serve_index():
