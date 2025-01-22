@@ -1,25 +1,26 @@
 document.getElementById('queryForm').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the form from reloading the page
     
-    const userInput = document.querySelector('#userInput').value;
+    const userInput = document.querySelector('#userInput');
     const mainDiv = document.querySelector('#main');
-    
+
     const queryDiv = document.createElement("div");
     const responseDiv = document.createElement("div");
 
     queryDiv.classList.add("query");
     responseDiv.classList.add("response");
 
-    queryDiv.textContent = userInput;
+    queryDiv.textContent = userInput.value;
     mainDiv.appendChild(queryDiv);
 
     try {
-      const response = await fetch('http://localhost:5000/query', {
+      const serverUrl = window.location.origin; 
+      const response = await fetch(`${serverUrl}/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: userInput }),
+        body: JSON.stringify({ query: userInput.value }),
       });
 
       if (!response.ok) {
