@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+body {
+    background-color: #f3e9d3;
+    padding:0px;
+    margin:0px; 
+    font-family: "Josefin Sans", sans-serif;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    height:100vmin
+}
