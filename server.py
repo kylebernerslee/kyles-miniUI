@@ -1,0 +1,36 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import requests
+
+app = Flask(__name__)
+CORS(app)
+
+OLLAMA_API_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "tinyllama:latest"
+
+@app.route('/query', methods=['POST'])
+def query_ollama():
+    data = request.get_json()
+    if not data or 'query' not in data:
+        return jsonify({"error": "Invalid input"}), 400
+    
+    user_query = data['query']
+
+    payload = {
+        "model":MODEL_NAME,
+        "prompt":user_query,
+        "stream":False
+    }
+
+    try:
+        response = requests.post(OLLAMA_API_URL, json=payload)
+        print("Ollama Response:", response)
+        response.raise_for_status()
+        ollama_response = response.json()
+        print(ollama_response)
+        return jsonify({"response": ollama_response.get("response", "No response received")})
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)    

@@ -6,7 +6,8 @@ document.getElementById('queryForm').addEventListener('submit', async (event) =>
     const responseDiv = document.getElementById('response');
     
     queryDiv.textContent = userInput;
-    responseDiv.textContent = 'Loading...'; // Show a loading message
+
+    console.log(userInput);
 
     try {
       const response = await fetch('http://localhost:5000/query', {
@@ -14,7 +15,7 @@ document.getElementById('queryForm').addEventListener('submit', async (event) =>
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: userInput }),
+        body: JSON.stringify({ query: userInput }),
       });
 
       if (!response.ok) {
@@ -23,7 +24,9 @@ document.getElementById('queryForm').addEventListener('submit', async (event) =>
 
       const data = await response.json();
       responseDiv.textContent = data.response; // Display the API response
-    } catch (error) {
+    }
+    catch (error)
+    {
       responseDiv.textContent = `Error: ${error.message}`;
     }
   });
