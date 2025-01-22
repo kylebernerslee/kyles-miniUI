@@ -1,13 +1,17 @@
 document.getElementById('queryForm').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the form from reloading the page
     
-    const userInput = document.getElementById('userInput').value;
-    const queryDiv = document.getElementById('query');
-    const responseDiv = document.getElementById('response');
+    const userInput = document.querySelector('#userInput').value;
+    const mainDiv = document.querySelector('#main');
     
-    queryDiv.textContent = userInput;
+    const queryDiv = document.createElement("div");
+    const responseDiv = document.createElement("div");
 
-    console.log(userInput);
+    queryDiv.classList.add("query");
+    responseDiv.classList.add("response");
+
+    queryDiv.textContent = userInput;
+    mainDiv.appendChild(queryDiv);
 
     try {
       const response = await fetch('http://localhost:5000/query', {
@@ -24,6 +28,7 @@ document.getElementById('queryForm').addEventListener('submit', async (event) =>
 
       const data = await response.json();
       responseDiv.textContent = data.response; // Display the API response
+      mainDiv.appendChild(responseDiv);
     }
     catch (error)
     {

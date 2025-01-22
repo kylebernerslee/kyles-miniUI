@@ -49,4 +49,17 @@ button:active {
 
 #main {
     width: 60vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.query {
+    background-color: #dfd1b2;
+    height: fit-content;
+    width: fit-content;
+    align-self: flex-end;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
 }
