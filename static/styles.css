@@ -6,7 +6,7 @@ body {
     margin: 0px;
     font-family: "Josefin Sans", sans-serif;
     display: grid;
-    grid-template-rows: 3fr 1fr;
+    grid-template-rows: auto 1fr;
     height: 100vmin;
     margin: 25px;
     justify-content: space-evenly;
@@ -55,6 +55,8 @@ button:active {
     margin-bottom: 20px;
     border-bottom: solid 1px;
     padding: 15px;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .query {

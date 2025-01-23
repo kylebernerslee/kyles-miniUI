@@ -6,11 +6,12 @@ app = Flask(__name__)
 CORS(app)
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "qwen2.5:0.5b"
+MODEL_NAME = "tinyllama:latest"
+CONVO_MEMORY = ""
 
 @app.route('/')
 def serve_index():
-    return send_from_directory('.', 'index.html')  # Assuming index.html is in the same directory as this script
+    return send_from_directory('.', 'index.html')
 
 @app.route('/static/<path:filename>')
 def serve_static_files(filename):
@@ -18,6 +19,7 @@ def serve_static_files(filename):
 
 @app.route('/query', methods=['POST'])
 def query_ollama():
+    global CONVO_MEMORY
     data = request.get_json()
     if not data or 'query' not in data:
         return jsonify({"error": "Invalid inputs"}), 400
@@ -34,9 +36,13 @@ def query_ollama():
         response = requests.post(OLLAMA_API_URL, json=payload)
         print("Ollama Response:", response)
         response.raise_for_status()
-        ollama_response = response.json()
+        ollama_response_json = response.json()
+        ollama_response = ollama_response_json.get("response", "No response received")
+        
+        print(ollama_response_json)
         print(ollama_response)
-        return jsonify({"response": ollama_response.get("response", "No response received")})
+
+        return jsonify({"response": ollama_response})
     except requests.RequestException as e:
         return jsonify({"error": str(e)}), 500
     
