@@ -7,15 +7,13 @@ app = Flask(__name__)
 CORS(app)
 
 # Define the prompt template
-template = """Question: {question}
-
-Answer: Let's think step by step."""
+template = """{question}"""
 
 # Initialize the prompt template
 prompt = ChatPromptTemplate.from_template(template)
 
 # Initialize the LLM model (Ollama)
-llm = OllamaLLM(model="tinyllama:latest")
+llm = OllamaLLM(model="qwen2.5:0.5b-instruct")
 
 # Chain the prompt and the model
 chain = prompt | llm
