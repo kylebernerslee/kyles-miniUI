@@ -4,7 +4,7 @@ let kyles_miniUI_uniqueId = localStorage.getItem('kyles_miniUI_uniqueId');
 // If the unique ID doesn't exist, create a new one and store it in localStorage
 if (!kyles_miniUI_uniqueId) {
   kyles_miniUI_uniqueId = `id-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    localStorage.setItem('kyles_miniUI_uniqueId', kyles_miniUI_uniqueId);
+  localStorage.setItem('kyles_miniUI_uniqueId', kyles_miniUI_uniqueId);
 }
 
 document.getElementById('queryForm').addEventListener('submit', async (event) => {
@@ -12,38 +12,47 @@ document.getElementById('queryForm').addEventListener('submit', async (event) =>
   
   const userInput = document.querySelector('#userInput');
   const mainDiv = document.querySelector('#main');
+  let responseText = "";  // To accumulate the streamed response
 
   const queryDiv = document.createElement("div");
-  const responseDiv = document.createElement("div");
-
   queryDiv.classList.add("query");
-  responseDiv.classList.add("response");
-
   queryDiv.textContent = userInput.value;
   mainDiv.appendChild(queryDiv);
 
+  const responseDiv = document.createElement("div");
+  responseDiv.classList.add("response");
+
   try {
-      const serverUrl = window.location.origin; 
-      const response = await fetch(`${serverUrl}/query`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              query: userInput.value,
-              uniqueId: kyles_miniUI_uniqueId // Send the unique ID with the query
-          }),
-      });
+    const serverUrl = window.location.origin; 
+    const response = await fetch(`${serverUrl}/query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: userInput.value,
+        uniqueId: kyles_miniUI_uniqueId // Send the unique ID with the query
+      }),
+    });
 
-      if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-      }
+    // Create a reader from the streamed response
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let done, value;
 
-      const data = await response.json();
-      responseDiv.textContent = data.response; // Display the API response
+    // Read the stream chunk-by-chunk
+    while (true) {
+      ({ done, value } = await reader.read());
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      responseText += chunk;
+
+      // Update the DOM incrementally with the new content
+      responseDiv.textContent = responseText;
       mainDiv.appendChild(responseDiv);
-    }    
-  catch (error) {
-      responseDiv.textContent = `Error: ${error.message}`;
+    }
+  } catch (error) {
+    responseDiv.textContent = `Error: ${error.message}`;
   }
 });
