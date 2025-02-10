@@ -7,7 +7,7 @@ from langchain_ollama import ChatOllama
 app = Flask(__name__)
 CORS(app)
 
-OLLAMA_MODEL = "dolphin3"
+OLLAMA_MODEL = "tinydolphin"
 LOGS_DIRECTORY = './logs'
 os.makedirs(LOGS_DIRECTORY, exist_ok=True)
 
